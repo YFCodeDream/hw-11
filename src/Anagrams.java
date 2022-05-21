@@ -34,22 +34,32 @@ public class Anagrams {
         HashMap<String, LinkedList<String>> anagramsMap = new HashMap<>();
 
         String currentWord;
+        // 遍历wordReader
         while ((currentWord = wordReader.nextWord()) != null) {
+            // 是否插入标志位
             AtomicReference<Boolean> hasInserted = new AtomicReference<>(false);
+            // 复制一份currentWord，forEach遍历map的lambda表达式语法需求
             String finalCurrentWord = currentWord;
-
+            
+            // 遍历anagramsMap
             anagramsMap.forEach((keyWord, anagramsList) -> {
-                if (keyWord.equals("care") && finalCurrentWord.equals("race"))
-                    System.out.println(checkKeyWordAnagram(finalCurrentWord, keyWord));
+                // 如果currentWord与keyWord满足anagram
                 if (checkKeyWordAnagram(finalCurrentWord, keyWord)) {
+                    // 如果当前没有记录currentWord
                     if (!anagramsList.contains(finalCurrentWord)) {
+                        // 加入对应列表，更改标志位
                         anagramsList.add(finalCurrentWord);
                         hasInserted.set(true);
                     }
                 }
             });
-
+            
+            // 如果标志位是false，表示没有插入
             if (!hasInserted.get()) {
+                // 没有插入有两种情况
+                // 1. 与anagramsMap目前所有的键值都不是anagram
+                // 2. 已经是anagramsMap的键值了
+                // 所以，第二种情况不用管，考虑第一个情况，新建键值对记录这个单词，同时新建记录列表即可
                 if (!anagramsMap.containsKey(currentWord)) {
                     anagramsMap.put(currentWord, new LinkedList<>());
                 }
